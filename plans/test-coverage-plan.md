@@ -14,6 +14,7 @@ This document outlines a comprehensive plan to add tests to the `research-pipeli
 |--------|-----------|----------------|
 | `src/core/pipeline.ts` | `tests/core/pipeline.test.ts` | Basic step execution, error handling (stop/continue), state passing, step history |
 | `src/core/research.ts` | `tests/core/research.test.ts` | Input validation, schema validation, custom steps, provider config |
+| `src/core/research.ts` | `tests/research.test.ts` | Top-level integration test for the `research()` API (complements `tests/core/research.test.ts`) |
 | `src/steps/analyze.ts` | `tests/steps/analyze.test.ts` | Focus, depth, recommendations, empty content, errors |
 | `src/steps/factCheck.ts` | `tests/steps/factCheck.test.ts` | Basic fact checking |
 | `src/steps/flowControl.ts` | `tests/steps/flowControl.test.ts` | evaluate, repeatUntil, maxIterations |
@@ -37,6 +38,7 @@ This document outlines a comprehensive plan to add tests to the `research-pipeli
 | `src/utils/logging.ts` | **No test file exists** |
 | `src/utils/merge.ts` | **No test file exists** (only used indirectly via parallel tests) |
 | `src/utils/steps.ts` | **No test file exists** (`createStep`, `wrapStepWithErrorHandling`) |
+| `src/types/errorCodes.ts` | **No test file exists** |
 | `src/core/pipeline.ts` | Missing: rollback strategy, timeout behavior, retryable steps, `createInitialState` |
 | `src/core/research.ts` | Missing: pipeline error propagation, no-results scenario, `continueOnError` config |
 
@@ -351,6 +353,17 @@ graph TD
 
 ## Test Infrastructure Improvements
 
+### Existing Mock Files
+
+The following mock files already exist and are part of the current test infrastructure:
+
+| File | Purpose |
+|------|---------|
+| `tests/mocks/analyze-mock.ts` | Mock for `analyze` step |
+| `tests/mocks/factCheck-mock.ts` | Mock for `factCheck` step |
+| `tests/mocks/plan-mock.ts` | Mock for `plan` step |
+| `tests/mocks/summarize-mock.ts` | Mock for `summarize` step |
+
 ### New Mock Files Needed
 
 | File | Purpose |
@@ -525,6 +538,7 @@ state.defaultLLM = mockLLM;
 | `tests/utils/merge.test.ts` | New test file | Medium |
 | `tests/utils/steps.test.ts` | New test file | Medium |
 | `tests/utils/logging.test.ts` | New test file | Low |
+| `tests/types/errorCodes.test.ts` | New test file | Medium |
 | `tests/mocks/extractContent-mock.ts` | New mock file | High |
 | `tests/mocks/refineQuery-mock.ts` | New mock file | High |
 | `tests/mocks/transform-mock.ts` | New mock file | High |
@@ -539,3 +553,13 @@ state.defaultLLM = mockLLM;
 | `tests/core/research.test.ts` | Error propagation, no-results, continueOnError |
 | `tests/steps/factCheck.test.ts` | Threshold, evidence, LLM errors, empty content |
 | `tests/test-utils.ts` | New helper functions and mock state factories |
+
+---
+
+## Out of Scope
+
+The following files are intentionally excluded from testing because they contain no runtime logic:
+
+| File | Reason |
+|------|--------|
+| `src/types/pipeline.ts` | Type-only file — contains only TypeScript interfaces and type aliases with no runtime logic to test |
