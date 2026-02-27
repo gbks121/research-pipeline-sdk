@@ -63,7 +63,7 @@ const researchStepSchema = z.object({
  * import { research } from '@plust/datasleuth';
  * import { z } from 'zod';
  * import { openai } from '@ai-sdk/openai';
- * import { google } from '@plust/search-sdk';
+ * import { google } from 'omnisearch-sdk';
  *
  * // Define your output schema
  * const outputSchema = z.object({

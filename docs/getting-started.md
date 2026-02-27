@@ -25,7 +25,7 @@ Here's a minimal example to get you started:
 import { research } from '@plust/datasleuth';
 import { z } from 'zod';
 import { openai } from '@ai-sdk/openai';
-import { google } from '@plust/search-sdk';
+import { google } from 'omnisearch-sdk';
 
 // Define your output schema
 const outputSchema = z.object({
@@ -74,7 +74,7 @@ search steps:
 ```typescript
 import { research } from '@plust/datasleuth';
 import { z } from 'zod';
-import { google } from '@plust/search-sdk';
+import { google } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
 
 // Configure Google search
@@ -100,7 +100,7 @@ step:
 ```typescript
 import { research, searchWeb, extractContent } from '@plust/datasleuth';
 import { z } from 'zod';
-import { google, bing } from '@plust/search-sdk';
+import { google, bing } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
 
 // Configure search providers

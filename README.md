@@ -135,7 +135,7 @@ import {
   repeatUntil,
 } from '@plust/datasleuth';
 import { z } from 'zod';
-import { google } from '@plust/search-sdk';
+import { google } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
 
 // Configure a search provider
@@ -264,7 +264,7 @@ import {
   ResultMerger,
 } from '@plust/datasleuth';
 import { z } from 'zod';
-import { google, bing } from '@plust/search-sdk';
+import { google, bing } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
 
 // Configure search providers
@@ -345,7 +345,7 @@ import {
   transform,
 } from '@plust/datasleuth';
 import { z } from 'zod';
-import { google, serpapi } from '@plust/search-sdk';
+import { google, serpapi } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
 
 // Configure search providers

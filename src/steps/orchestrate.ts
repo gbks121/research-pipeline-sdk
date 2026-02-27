@@ -850,7 +850,7 @@ async function executeOrchestrationStep(
  * ```typescript
  * import { research, orchestrate } from '@plust/datasleuth';
  * import { openai } from '@ai-sdk/openai';
- * import { google } from '@plust/search-sdk';
+ * import { google } from 'omnisearch-sdk';
  *
  * const results = await research({
  *   query: 'Impact of climate change on agriculture',

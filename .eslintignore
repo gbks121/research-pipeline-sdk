@@ -1,7 +1,0 @@
-node_modules/
-dist/
-coverage/
-docs/api/
-test-output.json
-coverage-output.json
-*.d.ts
