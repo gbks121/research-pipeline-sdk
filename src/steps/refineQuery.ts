@@ -389,9 +389,10 @@ async function generateRefinedQueriesWithLLM(
         }
 
         // Add research plan if available
-        if (relevantData.researchPlan && relevantData.researchPlan.objectives) {
+        const researchPlan = relevantData.researchPlan as Record<string, unknown> | undefined;
+        if (researchPlan && researchPlan['objectives']) {
           contextText += 'Research Plan Objectives:\n';
-          relevantData.researchPlan.objectives.forEach((objective: string, index: number) => {
+          (researchPlan['objectives'] as string[]).forEach((objective: string, index: number) => {
             contextText += `${index + 1}. ${objective}\n`;
           });
           contextText += '\n';

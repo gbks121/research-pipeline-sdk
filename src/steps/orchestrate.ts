@@ -12,7 +12,7 @@ import { z } from 'zod';
 
 // Add imports for all built-in steps
 import { plan } from './plan.js';
-import { searchWeb } from './searchWeb.js';
+import { searchWeb, WebSearchOptions } from './searchWeb.js';
 import { extractContent } from './extractContent.js';
 import { factCheck } from './factCheck.js';
 import { analyze } from './analyze.js';
@@ -28,7 +28,7 @@ export interface OrchestrateOptions {
   /** LLM model to use for orchestration (from the AI library) */
   model: LanguageModel;
   /** Default search provider to use for search-dependent steps */
-  searchProvider?: unknown;
+  searchProvider?: WebSearchOptions['provider'];
   /** Map of tool names to step functions that can be used by the agent */
   tools?: Record<string, ResearchStep>;
   /** Custom prompt for the orchestration agent */
