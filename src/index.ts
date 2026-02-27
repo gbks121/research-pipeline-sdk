@@ -1,16 +1,16 @@
 /**
- * @plust/datasleuth
+ * research-pipeline-sdk
  *
  * A powerful deep research tool for gathering and synthesizing information with AI.
  * This package enables developers to perform comprehensive research on any topic with
  * a simple functional API, returning structured results based on a specified schema.
  *
  * @packageDocumentation
- * @module datasleuth
+ * @module research-pipeline-sdk
  *
  * @example
  * ```typescript
- * import { research } from '@plust/datasleuth';
+ * import { research } from 'research-pipeline-sdk';
  * import { z } from 'zod';
  *
  * // Define your output schema

@@ -1,7 +1,7 @@
 import { searchWeb } from '../../src/steps/searchWeb';
 import { createMockState, executeStep } from '../test-utils';
 import type { ResearchState } from '../../src/types/pipeline';
-import { webSearch as mockWebSearchModule } from '@plust/search-sdk';
+import { webSearch as mockWebSearchModule } from 'omnisearch-sdk';
 
 // Define the mockSearchProvider for our tests
 const mockSearchProvider = {
@@ -13,8 +13,8 @@ const mockSearchProvider = {
 // Get the mocked webSearch function
 const mockWebSearch = mockWebSearchModule as jest.Mock;
 
-// Mock the @plust/search-sdk module
-jest.mock('@plust/search-sdk', () => {
+// Mock the omnisearch-sdk module
+jest.mock('omnisearch-sdk', () => {
   return {
     webSearch: jest.fn().mockImplementation(async (options) => {
       // Return different mock data based on the query to support our tests
@@ -27,9 +27,9 @@ jest.mock('@plust/search-sdk', () => {
         return [{ title: 'Result 1', url: 'https://example.com/1', snippet: 'Snippet 1' }];
       } else if (query === 'query2') {
         return [{ title: 'Result 2', url: 'https://example.com/2', snippet: 'Snippet 2' }];
-      } else if (options.provider && options.provider.name === 'error-provider') {
+      } else if (options.provider && options.provider[0]?.name === 'error-provider') {
         throw new Error('Search API failure');
-      } else if (options.provider && options.provider.name === 'duplicate-provider') {
+      } else if (options.provider && options.provider[0]?.name === 'duplicate-provider') {
         return [
           { title: 'Result 1', url: 'https://example.com/duplicate', snippet: 'Snippet 1' },
           { title: 'Result 2', url: 'https://example.com/duplicate', snippet: 'Snippet 2' },
@@ -263,9 +263,11 @@ describe('searchWeb step', () => {
     // Verify search was called with the default provider
     expect(mockWebSearch).toHaveBeenCalledWith(
       expect.objectContaining({
-        provider: expect.objectContaining({
-          name: 'default-search-provider',
-        }),
+        provider: expect.arrayContaining([
+          expect.objectContaining({
+            name: 'default-search-provider',
+          }),
+        ]),
       })
     );
     expect(updatedState.data.searchResults).toBeDefined();

@@ -1,6 +1,7 @@
 ---
 name: Documentation
-about: Report issues or suggest improvements to @plust/datasleuth documentation
+about:
+  Report issues or suggest improvements to research-pipeline-sdk documentation
 title: '[DOCS] '
 labels: documentation
 assignees: ''

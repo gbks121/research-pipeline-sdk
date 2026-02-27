@@ -1,13 +1,13 @@
 /**
  * Web search step for the research pipeline
- * Uses @plust/search-sdk to perform web searches
+ * Uses omnisearch-sdk to perform web searches
  */
 import {
   webSearch as performWebSearch,
   SearchProvider as SDKSearchProvider,
   SearchResult as SDKSearchResult,
   WebSearchOptions as SDKWebSearchOptions,
-} from '@plust/search-sdk';
+} from 'omnisearch-sdk';
 import { createStep } from '../utils/steps.js';
 import { ResearchState, SearchResult as StateSearchResult } from '../types/pipeline.js';
 import { z } from 'zod';
@@ -45,7 +45,7 @@ export interface SearchProviderConfig {
  * Options for the web search step
  */
 export interface WebSearchOptions {
-  /** Search provider configured from @plust/search-sdk */
+  /** Search provider configured from omnisearch-sdk */
   provider?: SDKSearchProvider | SearchProviderConfig;
   /** Optional custom query override (if not provided, will use the main research query) */
   query?: string;
@@ -264,7 +264,7 @@ async function executeWebSearchStep(
           language,
           region,
           safeSearch,
-          provider: sdkProvider,
+          provider: [sdkProvider],
         };
 
         stepLogger.debug(`Searching for: "${query}"`);

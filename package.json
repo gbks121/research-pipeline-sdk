@@ -1,5 +1,5 @@
 {
-  "name": "@plust/datasleuth",
+  "name": "research-pipeline-sdk",
   "version": "0.2.1",
   "description": "Build LLM-powered research pipelines and output structured data.",
   "main": "dist/index.js",
@@ -50,7 +50,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PlustOrg/datasleuth.git"
+    "url": "git+https://github.com/PlustOrg/research-pipeline-sdk.git"
   },
   "keywords": [
     "research",
@@ -71,17 +71,17 @@
   "author": "Jacques Marais",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PlustOrg/datasleuth/issues"
+    "url": "https://github.com/PlustOrg/research-pipeline-sdk/issues"
   },
-  "homepage": "https://github.com/PlustOrg/datasleuth#readme",
+  "homepage": "https://github.com/PlustOrg/research-pipeline-sdk#readme",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@plust/search-sdk": "^1.0.0",
+    "omnisearch-sdk": ">=1.1.0",
     "axios": "^1.9.0",
     "cheerio": "^1.0.0",
     "mastra": "^0.6.1"
@@ -93,8 +93,6 @@
   "devDependencies": {
     "@eslint/js": "9.26.0",
     "@types/jest": "^29.5.14",
-    "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^7.4.0",
     "ai": "^4.3.15",
     "eslint": "^9.26.0",
     "gh-pages": "6.3.0",

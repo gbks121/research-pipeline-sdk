@@ -1,6 +1,7 @@
-# Troubleshooting Guide for @plust/datasleuth
+# Troubleshooting Guide for research-pipeline-sdk
 
-This guide helps you identify and resolve common issues that may occur when using @plust/datasleuth.
+This guide helps you identify and resolve common issues that may occur when
+using research-pipeline-sdk.
 
 ## Table of Contents
 
@@ -14,20 +15,24 @@ This guide helps you identify and resolve common issues that may occur when usin
 
 ## Common Error Types
 
-@plust/datasleuth provides detailed error types for different failure scenarios. Here's how to handle them:
+research-pipeline-sdk provides detailed error types for different failure
+scenarios. Here's how to handle them:
 
 ### ConfigurationError
 
 **Problem:** Missing or invalid configuration parameters.
 
 **Solution:**
+
 - Check that all required parameters are provided
 - Verify that configuration values match expected types and formats
 - Look at the error details and suggestions for specific guidance
 
 ```typescript
 try {
-  const results = await research({ /*...*/ });
+  const results = await research({
+    /*...*/
+  });
 } catch (error) {
   if (error instanceof ConfigurationError) {
     console.error(`Configuration error: ${error.message}`);
@@ -42,6 +47,7 @@ try {
 **Problem:** Output doesn't match the provided schema.
 
 **Solution:**
+
 - Examine the validation error to see which fields failed
 - Adjust your schema to match the actual output structure
 - Use `z.optional()` for fields that might not always be present
@@ -52,6 +58,7 @@ try {
 **Problem:** Error when communicating with language model.
 
 **Solution:**
+
 - Verify API keys and permissions are correct
 - Check network connectivity
 - Examine rate limits or quota restrictions
@@ -63,6 +70,7 @@ try {
 **Problem:** Error executing web searches.
 
 **Solution:**
+
 - Verify search provider API keys and configuration
 - Check usage limits and quotas
 - Try different search queries
@@ -73,6 +81,7 @@ try {
 **Problem:** Error extracting content from web pages.
 
 **Solution:**
+
 - Check that the URLs are accessible
 - Adjust selectors for content extraction
 - Handle pagination or dynamically loaded content
@@ -83,6 +92,7 @@ try {
 **Problem:** Operation exceeded the configured timeout.
 
 **Solution:**
+
 - Increase timeout limits for complex operations
 - Break down research into smaller subtasks
 - Optimize performance bottlenecks
@@ -95,14 +105,16 @@ try {
 **Problem:** Error about missing LLM.
 
 **Solution:**
+
 - Provide a default LLM when initializing research:
+
   ```typescript
   import { openai } from '@ai-sdk/openai';
-  
+
   research({
-    query: "Your query",
+    query: 'Your query',
     defaultLLM: openai('gpt-4o'),
-    outputSchema: schema
+    outputSchema: schema,
   });
   ```
 
@@ -111,7 +123,7 @@ try {
   steps: [
     plan({ llm: openai('gpt-4o') }),
     // other steps...
-  ]
+  ];
   ```
 
 ### Unsupported Model
@@ -119,6 +131,7 @@ try {
 **Problem:** Error about unsupported model.
 
 **Solution:**
+
 - Verify that you're using a supported model identifier
 - Update to the latest version of the AI SDK
 - Check model availability in your region
@@ -129,6 +142,7 @@ try {
 **Problem:** Error about token limits or content being too long.
 
 **Solution:**
+
 - Implement content chunking for large documents
 - Add `maxContentSize` option to steps that process large content
 - Use efficient prompt templates
@@ -141,6 +155,7 @@ try {
 **Problem:** Search steps return no results.
 
 **Solution:**
+
 - Verify search provider API keys and configuration
 - Examine search query complexity and rephrase if needed
 - Check for rate limits or quotas
@@ -152,6 +167,7 @@ try {
 **Problem:** Errors relating to API authentication.
 
 **Solution:**
+
 - Verify API keys are correct and not expired
 - Ensure keys have required permissions
 - Check that the API endpoint URLs are correct
@@ -162,6 +178,7 @@ try {
 **Problem:** API usage limit errors.
 
 **Solution:**
+
 - Implement rate limiting in your application
 - Add exponential backoff for retries
 - Consider upgrading your API plan
@@ -175,6 +192,7 @@ try {
 **Problem:** Validation fails due to missing fields.
 
 **Solution:**
+
 - Examine the validation error to see which fields are missing
 - Ensure the research pipeline is generating all required fields
 - Make fields optional if they might not always be present:
@@ -183,7 +201,7 @@ try {
     summary: z.string(),
     findings: z.array(z.string()).optional(), // Make optional
     // or provide default value:
-    sources: z.array(z.string().url()).default([])
+    sources: z.array(z.string().url()).default([]),
   });
   ```
 
@@ -192,21 +210,22 @@ try {
 **Problem:** Type validation failures.
 
 **Solution:**
+
 - Check the expected types in your schema
 - Add type transformations for common cases:
   ```typescript
   // Transform string numbers to actual numbers
   const schema = z.object({
     value: z.preprocess(
-      (val) => typeof val === 'string' ? Number(val) : val,
+      (val) => (typeof val === 'string' ? Number(val) : val),
       z.number()
-    )
+    ),
   });
   ```
 - Use `z.union()` for fields that might have multiple types:
   ```typescript
   const schema = z.object({
-    date: z.union([z.string(), z.date()])
+    date: z.union([z.string(), z.date()]),
   });
   ```
 
@@ -215,15 +234,15 @@ try {
 **Problem:** Issues with nested objects or arrays.
 
 **Solution:**
+
 - Break down complex schemas into smaller parts
 - Use `z.array()`, `z.record()`, and `z.object()` appropriately
 - Add custom validation with `.refine()`:
   ```typescript
   const schema = z.object({
-    items: z.array(z.string()).refine(
-      (items) => items.length > 0,
-      { message: "Items array cannot be empty" }
-    )
+    items: z.array(z.string()).refine((items) => items.length > 0, {
+      message: 'Items array cannot be empty',
+    }),
   });
   ```
 
@@ -234,6 +253,7 @@ try {
 **Problem:** Research pipeline takes too long to complete.
 
 **Solution:**
+
 - Break complex research into multiple focused queries
 - Use parallel processing for independent research tracks
 - Add timeouts to each step to prevent long-running operations
@@ -244,6 +264,7 @@ try {
 **Problem:** High memory usage during research.
 
 **Solution:**
+
 - Limit the amount of content processed at once
 - Use streaming for large content processing
 - Implement cleanup for intermediate data
@@ -254,6 +275,7 @@ try {
 **Problem:** LLM operations are slow.
 
 **Solution:**
+
 - Use smaller, faster models for tasks that don't require advanced capabilities
 - Optimize prompts to be concise and efficient
 - Implement request batching where appropriate
@@ -267,6 +289,7 @@ try {
 **Problem:** Memory issues when processing large documents.
 
 **Solution:**
+
 - Process content in chunks:
   ```typescript
   // Process content in 10KB chunks
@@ -280,7 +303,7 @@ try {
 - Implement pagination for web content extraction
 - Set maximum content size limits:
   ```typescript
-  extractContent({ maxContentLength: 50000 })
+  extractContent({ maxContentLength: 50000 });
   ```
 
 ### Efficient Data Structures
@@ -288,6 +311,7 @@ try {
 **Problem:** Inefficient data handling in complex research.
 
 **Solution:**
+
 - Avoid deep object cloning where possible
 - Use Map and Set for efficient lookups and deduplications
 - Release references to large objects after use
@@ -300,14 +324,15 @@ try {
 **Problem:** Need more information about what's happening.
 
 **Solution:**
+
 - Configure logging level:
   ```typescript
   research({
-    query: "Your query",
+    query: 'Your query',
     outputSchema: schema,
     config: {
-      logLevel: 'debug' // 'error', 'warn', 'info', 'debug', 'trace'
-    }
+      logLevel: 'debug', // 'error', 'warn', 'info', 'debug', 'trace'
+    },
   });
   ```
 
@@ -316,6 +341,7 @@ try {
 **Problem:** Need to understand intermediate state.
 
 **Solution:**
+
 - Add custom evaluation steps to inspect state:
   ```typescript
   steps: [
@@ -324,9 +350,9 @@ try {
       criteriaFn: (state) => {
         console.log('Current state:', JSON.stringify(state.data, null, 2));
         return true; // Always continue
-      }
-    })
-  ]
+      },
+    }),
+  ];
   ```
 
 ### Isolate Issues
@@ -334,25 +360,28 @@ try {
 **Problem:** Complex pipeline with unknown failure point.
 
 **Solution:**
+
 - Run individual steps in isolation:
   ```typescript
   // Test just the search step
   const result = await research({
-    query: "Your query",
+    query: 'Your query',
     outputSchema: schema,
-    steps: [searchWeb({ provider: googleSearch })]
+    steps: [searchWeb({ provider: googleSearch })],
   });
   ```
 - Add error handling to continue on failure:
   ```typescript
   research({
-    query: "Your query",
+    query: 'Your query',
     outputSchema: schema,
     config: {
       errorHandling: 'continue',
-      continueOnError: true
-    }
+      continueOnError: true,
+    },
   });
   ```
 
-If you encounter an issue not covered by this guide, please check the [GitHub issues](https://github.com/Jacques2Marais/datasleuth/issues) or submit a new one with detailed information about the problem.
+If you encounter an issue not covered by this guide, please check the
+[GitHub issues](https://github.com/PlustOrg/research-pipeline-sdk/issues) or
+submit a new one with detailed information about the problem.
