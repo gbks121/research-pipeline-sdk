@@ -61,3 +61,4 @@ Thumbs.db
 
 # Local development only
 docs/development-plan.md
+test-output.json
