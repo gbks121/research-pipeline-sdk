@@ -6,7 +6,7 @@ import { createStep } from '../utils/steps.js';
 import { ResearchState, ResearchStep } from '../types/pipeline.js';
 import { z } from 'zod';
 import { ValidationError, ConfigurationError, ProcessingError } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 
 /**
  * Options for creating a research track
@@ -23,7 +23,7 @@ export interface TrackOptions {
   /** Optional description of this track's purpose */
   description?: string;
   /** Optional metadata to associate with this track */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   /** Whether to continue execution if a step fails */
   continueOnError?: boolean;
   /** Retry configuration for the entire track */
@@ -38,6 +38,7 @@ export interface TrackOptions {
 /**
  * Schema for track result
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const trackResultSchema = z.object({
   name: z.string(),
   results: z.array(z.any()),
@@ -214,9 +215,12 @@ async function executeTrackStep(
         message: err instanceof Error ? err.message : String(err),
         step:
           err instanceof Error && 'step' in err
-            ? (err as any).step
+            ? (err as { step?: string }).step
             : currentState.metadata.currentStep || 'unknown',
-        code: err instanceof Error && 'code' in err ? (err as any).code : 'TRACK_STEP_ERROR',
+        code:
+          err instanceof Error && 'code' in err
+            ? (err as { code?: string }).code
+            : 'TRACK_STEP_ERROR',
       })),
       completed: currentState.errors.length === 0, // Changed this line - If there are errors, the track is not completed
     };
@@ -303,7 +307,7 @@ async function executeTrackStep(
           step: currentState.metadata.currentStep || 'unknown',
           code:
             error instanceof Error && 'code' in error
-              ? (error as any).code
+              ? (error as { code?: string }).code
               : 'TRACK_EXECUTION_ERROR',
         },
       ],

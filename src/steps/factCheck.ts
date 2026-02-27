@@ -2,18 +2,17 @@
  * Fact-checking step for the research pipeline
  * Validates information using LLMs and external sources
  */
-import * as mastra from 'mastra';
 import { createStep } from '../utils/steps.js';
 import {
   ResearchState,
   FactCheckResult as StateFactCheckResult,
   ExtractedContent as StateExtractedContent,
+  StepOptions,
 } from '../types/pipeline.js';
-import { StepOptions } from '../types/pipeline.js';
 import { z } from 'zod';
-import { generateText, generateObject, LanguageModel } from 'ai';
+import { generateObject, LanguageModel } from 'ai';
 import { ValidationError, LLMError, ConfigurationError, ApiError } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 import { executeWithRetry } from '../utils/retry.js';
 
 /**
@@ -491,7 +490,8 @@ export function factCheck(options: FactCheckOptions = {}): ReturnType<typeof cre
   return createStep(
     'FactCheck',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: StepOptions) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async (state: ResearchState, _opts?: StepOptions) => {
       return executeFactCheckStep(state, options);
     },
     options,

@@ -15,6 +15,7 @@ import { SearchError, NetworkError, ConfigurationError, ValidationError } from '
 import { logger, createStepLogger } from '../utils/logging.js';
 
 // Schema for search result
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const searchResultSchema = z.object({
   url: z.string().url(),
   title: z.string(),
@@ -38,7 +39,7 @@ export interface SearchProviderConfig {
   cx?: string; // For Google custom search
   baseUrl?: string;
   parameters?: Record<string, string | number | boolean>;
-  [key: string]: any; // Any additional provider-specific properties
+  [key: string]: unknown; // Any additional provider-specific properties
 }
 
 /**
@@ -100,9 +101,11 @@ function ensureSDKProvider(provider: SDKSearchProvider | SearchProviderConfig): 
       apiKey: config.apiKey,
       baseUrl: config.baseUrl,
       // Spread the rest of the config properties except those already specified
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ...(({ apiKey, name, ...rest }) => rest)(config),
     },
-    search: async (options) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    search: async (_options) => {
       // This is just a placeholder to satisfy the type system
       // The actual search will be performed by the SDK functions
       logger.warn('Mock provider search called - this should not happen in production');
@@ -122,7 +125,7 @@ function convertSearchResults(sdkResults: SDKSearchResult[]): StateSearchResult[
     domain: result.domain,
     publishedDate: result.publishedDate,
     provider: result.provider,
-    raw: result.raw ? (result.raw as Record<string, any>) : undefined,
+    raw: result.raw ? (result.raw as Record<string, unknown>) : undefined,
   }));
 }
 

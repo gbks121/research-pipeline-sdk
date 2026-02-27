@@ -5,9 +5,9 @@
 import { createStep } from '../utils/steps.js';
 import { ResearchState } from '../types/pipeline.js';
 import { z } from 'zod';
-import { generateText, generateObject, LanguageModel } from 'ai';
+import { generateObject, LanguageModel } from 'ai';
 import { ValidationError, LLMError, ConfigurationError } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 import { executeWithRetry } from '../utils/retry.js';
 
 // Schema for research plan output

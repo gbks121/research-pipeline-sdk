@@ -1,11 +1,5 @@
 import { z } from 'zod';
-import {
-  ResearchInput,
-  ResearchStep,
-  ResearchResult,
-  ResearchState,
-  StepOptions,
-} from '../types/pipeline.js';
+import { ResearchInput, ResearchStep, ResearchResult } from '../types/pipeline.js';
 import { createInitialState, executePipeline } from './pipeline.js';
 import { plan } from '../steps/plan.js';
 import { searchWeb } from '../steps/searchWeb.js';
@@ -20,22 +14,6 @@ import {
   isResearchError,
 } from '../types/errors.js';
 import { logger } from '../utils/logging.js';
-
-// Define a more specific type for the steps schema using our defined types
-const researchStepSchema = z.object({
-  name: z.string(),
-  execute: z
-    .function()
-    .args(z.custom<ResearchState>())
-    .returns(z.promise(z.custom<ResearchState>())),
-  rollback: z
-    .function()
-    .args(z.custom<ResearchState>())
-    .returns(z.promise(z.custom<ResearchState>()))
-    .optional(),
-  options: z.record(z.string(), z.any()).optional(),
-  retryable: z.boolean().optional(),
-});
 
 /**
  * Main research function - the primary API for the research-pipeline-sdk package
@@ -160,7 +138,7 @@ export async function research(input: ResearchInput): Promise<ResearchResult> {
     }
 
     // If no steps provided, add default steps
-    let pipelineSteps = steps.length > 0 ? steps : getDefaultSteps(query);
+    let pipelineSteps = steps.length > 0 ? steps : getDefaultSteps();
 
     // Always add the transform step as the last step in the pipeline
     // to ensure output matches the expected schema
@@ -175,7 +153,7 @@ export async function research(input: ResearchInput): Promise<ResearchResult> {
         // Special handling for specific test cases
         try {
           // Start with a basic mock result
-          const mockTestResult: any = {
+          const mockTestResult: Record<string, unknown> = {
             message: 'Research completed successfully!',
             summary: 'This is a mock summary for testing',
             keyFindings: ['Finding 1', 'Finding 2'],
@@ -353,7 +331,7 @@ export interface MockSearchProvider {
  *
  * Note: These steps require both defaultLLM and defaultSearchProvider to be provided to the research function
  */
-function getDefaultSteps(query: string): ResearchStep[] {
+function getDefaultSteps(): ResearchStep[] {
   return [
     // Start with research planning (requires an LLM)
     plan({

@@ -7,7 +7,7 @@
 import { createStep } from '../utils/steps.js';
 import { ResearchState } from '../types/pipeline.js';
 import { ValidationError, ConfigurationError, LLMError, ProcessingError } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 import { executeWithRetry } from '../utils/retry.js';
 
 /**
@@ -69,7 +69,7 @@ export interface Entity {
   description: string;
   confidence: number;
   mentions: number;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
 }
 
 /**
@@ -269,15 +269,12 @@ async function executeClassifyStep(
  * This will be replaced with an actual implementation using mastra and the ai SDK
  */
 async function simulateEntityClassification(
-  extractedContent: any[], // Changed from 'content: string[]' to accept ExtractedContent[]
+  extractedContent: Array<{ content?: string }>, // Changed from 'content: string[]' to accept ExtractedContent[]
   query: string,
   options: ClassifyOptions
 ): Promise<ClassificationData> {
   // Simulate processing time
   await new Promise((resolve) => setTimeout(resolve, 1200));
-
-  // Extract actual text content from ExtractedContent objects
-  const textContent = extractedContent.map((item) => item.content || '').filter(Boolean);
 
   // Sample entities based on common topics - will be replaced with real LLM-based extraction
   const entities: Record<string, Entity> = {};
@@ -381,6 +378,7 @@ async function simulateEntityClassification(
   if (options.customEntityTypes && options.customEntityTypes.length > 0) {
     // This would normally extract entities of the specified types from the content
     // For now, just add a note in the metadata
+    // eslint-disable-next-line no-console
     console.log(`Would extract custom entity types: ${options.customEntityTypes.join(', ')}`);
   }
 

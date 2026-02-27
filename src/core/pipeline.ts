@@ -18,12 +18,7 @@ import {
 import { z } from 'zod';
 import { logger, createStepLogger } from '../utils/logging.js';
 import { executeWithRetry } from '../utils/retry.js';
-import {
-  BaseResearchError,
-  PipelineError,
-  ConfigurationError,
-  isResearchError,
-} from '../types/errors.js';
+import { BaseResearchError, PipelineError, isResearchError } from '../types/errors.js';
 
 /**
  * Default pipeline configuration
@@ -89,7 +84,7 @@ function recordStepExecution(
   success: boolean,
   error?: Error | BaseResearchError,
   duration?: number,
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 ): ResearchState {
   const startTime = new Date(Date.now() - (duration || 0));
   const endTime = new Date();
@@ -190,7 +185,7 @@ async function executeStepWithErrorHandling(
           );
         },
       });
-    } catch (error) {
+    } catch {
       // If all retries failed, we'll get here
       stepLogger.error(`All ${config.maxRetries} retry attempts failed`);
 

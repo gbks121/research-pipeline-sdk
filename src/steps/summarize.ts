@@ -2,14 +2,17 @@
  * Summarization step for the research pipeline
  * Synthesizes information into concise summaries using LLMs
  */
-import * as mastra from 'mastra';
 import { createStep } from '../utils/steps.js';
-import { ResearchState, ExtractedContent, FactCheckResult } from '../types/pipeline.js';
-import { StepOptions } from '../types/pipeline.js';
+import {
+  ResearchState,
+  ExtractedContent,
+  FactCheckResult,
+  StepOptions,
+} from '../types/pipeline.js';
 import { z } from 'zod';
 import { generateText, generateObject, LanguageModel } from 'ai';
 import { ValidationError, ConfigurationError, LLMError, ProcessingError } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 import { executeWithRetry } from '../utils/retry.js';
 
 /**
@@ -258,7 +261,7 @@ async function executeSummarizeStep(
 
     // Handle different return types based on format
     let summary: string;
-    let structuredSummary: any;
+    let structuredSummary: StructuredSummary | undefined;
 
     if (typeof summaryResult === 'string') {
       summary = summaryResult;
@@ -609,7 +612,8 @@ export function summarize(options: SummarizeOptions = {}): ReturnType<typeof cre
   return createStep(
     'Summarize',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: StepOptions) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async (state: ResearchState, _opts?: StepOptions) => {
       return executeSummarizeStep(state, options);
     },
     options,
