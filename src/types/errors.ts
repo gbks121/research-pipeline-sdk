@@ -199,7 +199,11 @@ export class MaxIterationsError extends BaseResearchError {
  * Type guard to check if an error is a ResearchError
  */
 export function isResearchError(error: unknown): error is ResearchError {
-  return error instanceof Error && 'code' in error && typeof (error as any).code === 'string';
+  return (
+    error instanceof Error &&
+    'code' in error &&
+    typeof (error as BaseResearchError).code === 'string'
+  );
 }
 
 /**

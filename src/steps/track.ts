@@ -378,7 +378,7 @@ export function track(options: TrackOptions): ReturnType<typeof createStep> {
   return createStep(
     'Track',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeTrackStep(state, options);
     },
     options,

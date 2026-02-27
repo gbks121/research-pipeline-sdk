@@ -184,7 +184,9 @@ async function executeWebSearchStep(
 
   try {
     // Determine which provider to use - first check options, then state's defaultSearchProvider
-    const provider = optionsProvider || state.defaultSearchProvider;
+    const provider =
+      optionsProvider ||
+      (state.defaultSearchProvider as SDKSearchProvider | SearchProviderConfig | undefined);
 
     // Verify that we have a provider to use
     if (!provider) {
@@ -441,7 +443,7 @@ export function searchWeb(options: WebSearchOptions): ReturnType<typeof createSt
   return createStep(
     'WebSearch',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeWebSearchStep(state, options);
     },
     options,

@@ -13,7 +13,7 @@ export interface ConflictResolutionOptions {
   /** Weights to apply to different tracks (for weighted strategy) */
   weights?: Record<string, number>;
   /** Custom resolution function (for custom strategy) */
-  customResolver?: (values: any[], metadata: any[]) => any;
+  customResolver?: (values: unknown[], metadata: unknown[]) => unknown;
   /** Function to extract confidence scores (for mostConfident strategy) */
   confidenceExtractor?: (trackResult: TrackResult) => number;
 }
@@ -32,13 +32,13 @@ export class ResultMerger {
   static mergeTrackData(
     tracks: Record<string, TrackResult>,
     options: ConflictResolutionOptions = { strategy: 'last' }
-  ): Record<string, any> {
-    const merged: Record<string, any> = {};
+  ): Record<string, unknown> {
+    const merged: Record<string, unknown> = {};
     const trackEntries = Object.entries(tracks);
 
     // Collect all unique data keys across all tracks
     const allKeys = new Set<string>();
-    trackEntries.forEach(([_, track]) => {
+    trackEntries.forEach(([, track]) => {
       if (track.data) {
         Object.keys(track.data).forEach((key) => allKeys.add(key));
       }
@@ -50,8 +50,8 @@ export class ResultMerger {
       if (key === 'tracks') return;
 
       // Collect all values for this key across tracks
-      const values: any[] = [];
-      const metadata: any[] = [];
+      const values: unknown[] = [];
+      const metadata: unknown[] = [];
 
       trackEntries.forEach(([trackName, track]) => {
         if (track.data && key in track.data) {
@@ -85,10 +85,10 @@ export class ResultMerger {
     tracks: Record<string, TrackResult>,
     state: ResearchState,
     options: ConflictResolutionOptions = { strategy: 'mostConfident' }
-  ): any {
+  ): unknown {
     // Collect and categorize results from all tracks
-    const resultsByType: Record<string, any[]> = {};
-    const metadataByType: Record<string, any[]> = {};
+    const resultsByType: Record<string, unknown[]> = {};
+    const metadataByType: Record<string, unknown[]> = {};
 
     Object.entries(tracks).forEach(([trackName, track]) => {
       if (track.results && track.results.length > 0) {
@@ -112,7 +112,7 @@ export class ResultMerger {
     });
 
     // Resolve conflicts for each result type
-    const mergedResults: Record<string, any> = {};
+    const mergedResults: Record<string, unknown> = {};
 
     Object.keys(resultsByType).forEach((type) => {
       const values = resultsByType[type];
@@ -139,10 +139,10 @@ export class ResultMerger {
    * @returns Resolved value
    */
   private static resolveConflict(
-    values: any[],
-    metadata: any[],
+    values: unknown[],
+    metadata: unknown[],
     options: ConflictResolutionOptions
-  ): any {
+  ): unknown {
     const { strategy, weights, customResolver, confidenceExtractor } = options;
 
     if (values.length === 0) return undefined;
@@ -161,7 +161,7 @@ export class ResultMerger {
           // Use custom confidence extractor
           const confidences = metadata.map((m, i) => ({
             value: values[i],
-            confidence: confidenceExtractor(m),
+            confidence: confidenceExtractor(m as TrackResult),
           }));
 
           confidences.sort((a, b) => b.confidence - a.confidence);
@@ -170,16 +170,16 @@ export class ResultMerger {
           // Use confidence from metadata
           const withConfidence = metadata.map((m, i) => ({
             value: values[i],
-            confidence: m.confidence || 0,
+            confidence: (m as { confidence?: number }).confidence || 0,
           }));
 
           withConfidence.sort((a, b) => b.confidence - a.confidence);
           return withConfidence[0].value;
         }
 
-      case 'majority':
+      case 'majority': {
         // Use the most common value
-        const counts = new Map<string, { count: number; value: any }>();
+        const counts = new Map<string, { count: number; value: unknown }>();
 
         values.forEach((value) => {
           const key = JSON.stringify(value);
@@ -200,8 +200,9 @@ export class ResultMerger {
         });
 
         return maxValue;
+      }
 
-      case 'weighted':
+      case 'weighted': {
         // Apply weights to each track's value
         if (!weights) {
           throw new Error('Weights required for weighted conflict resolution strategy');
@@ -213,10 +214,11 @@ export class ResultMerger {
         // Can only use weighted for numeric values
         if (typeof values[0] === 'number') {
           values.forEach((value, i) => {
-            const trackName = metadata[i].trackName;
+            const meta = metadata[i] as { trackName: string };
+            const trackName = meta.trackName;
             const weight = weights[trackName] || 1;
 
-            weightedSum += value * weight;
+            weightedSum += (value as number) * weight;
             totalWeight += weight;
           });
 
@@ -227,7 +229,8 @@ export class ResultMerger {
           let highestWeight = -1;
 
           values.forEach((value, i) => {
-            const trackName = metadata[i].trackName;
+            const meta = metadata[i] as { trackName: string };
+            const trackName = meta.trackName;
             const weight = weights[trackName] || 1;
 
             if (weight > highestWeight) {
@@ -238,6 +241,7 @@ export class ResultMerger {
 
           return highestWeightValue;
         }
+      }
 
       case 'custom':
         // Use custom resolution function
@@ -259,7 +263,16 @@ export class ResultMerger {
    * @param options Conflict resolution options
    * @returns A merge function that can be used with the parallel step
    */
-  static createMergeFunction(options: ConflictResolutionOptions = { strategy: 'mostConfident' }) {
+  static createMergeFunction(
+    options: ConflictResolutionOptions = { strategy: 'mostConfident' }
+  ): (
+    tracks: Record<string, TrackResult>,
+    state: ResearchState
+  ) => {
+    data: Record<string, unknown>;
+    results: unknown;
+    metadata: { mergeStrategy: string; tracksCount: number; mergedAt: string };
+  } {
     return function (tracks: Record<string, TrackResult>, state: ResearchState) {
       // Merge track data
       const mergedData = ResultMerger.mergeTrackData(tracks, options);

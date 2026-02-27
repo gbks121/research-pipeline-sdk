@@ -469,7 +469,7 @@ export function refineQuery(options: RefineQueryOptions = {}): ReturnType<typeof
   return createStep(
     'RefineQuery',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeRefineQueryStep(state, options);
     },
     options

@@ -173,7 +173,7 @@ async function executeParallelStep(
             metadata: {
               ...state.metadata,
               parallelTrackErrors: [
-                ...(state.metadata.parallelTrackErrors || []),
+                ...((state.metadata.parallelTrackErrors as unknown[]) || []),
                 {
                   trackName: track.name || `unnamed-${index}`,
                   error: errorMessage,
@@ -408,7 +408,7 @@ export function parallel(options: ParallelOptions): ReturnType<typeof createStep
   return createStep(
     'Parallel',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeParallelStep(state, options);
     },
     options,

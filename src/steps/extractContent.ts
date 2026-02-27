@@ -548,7 +548,7 @@ async function extractContentFromURL(
         url,
         title,
         content: finalContent,
-        metadata,
+        metadata: metadata as unknown as Record<string, unknown>,
         extractionDate: extractedAt, // Add the extractionDate field to match the pipeline.ts interface
       };
     } catch (error) {
