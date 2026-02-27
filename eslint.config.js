@@ -51,5 +51,17 @@ export default tseslint.config(
       '@typescript-eslint/ban-ts-comment': 'warn',
       'no-case-declarations': 'warn',
     },
+  },
+  {
+    // Relaxed rules for test files
+    files: ['tests/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      'no-useless-catch': 'off',
+      'no-console': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+    },
   }
 );
