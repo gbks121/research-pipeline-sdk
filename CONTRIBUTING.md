@@ -31,8 +31,8 @@ unacceptable behavior to the project maintainers.
 
 ### Prerequisites
 
-- Node.js (v16+)
-- npm (v7+) or yarn (v1.22+)
+- Node.js (v18+)
+- npm (v8+)
 - Git
 
 ### Development Environment Setup
@@ -43,15 +43,22 @@ unacceptable behavior to the project maintainers.
    git clone https://github.com/YOUR_USERNAME/research-pipeline-sdk.git
    cd research-pipeline-sdk
    ```
-3. Install dependencies:
+3. Install all dependencies (including dev dependencies):
    ```bash
-   npm install
+   npm install --include=dev
    ```
-4. Set up development environment:
+   > **Note:** If your environment has `NODE_ENV=production` set, you must use
+   > `npm install --include=dev` to ensure dev dependencies (jest, ts-jest, etc.)
+   > are installed. A plain `npm install` will skip dev dependencies in production mode.
+4. Build the project:
    ```bash
-   npm run setup:dev
+   npm run build
    ```
-5. Create a branch for your contribution:
+5. Run tests to verify your setup:
+   ```bash
+   npm run test:console
+   ```
+6. Create a branch for your contribution:
    ```bash
    git checkout -b feature/your-feature-name
    ```
