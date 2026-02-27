@@ -269,7 +269,7 @@ async function executeAnalyzeStep(
             analysis: {
               [focusKey]: {
                 ...analysisResult,
-                metadata: newState.data.analysisMetadata[focusKey],
+                metadata: (newState.data.analysisMetadata as Record<string, unknown>)[focusKey],
               },
             },
           },
@@ -475,7 +475,7 @@ export function analyze(options: AnalyzeOptions): ReturnType<typeof createStep> 
   return createStep(
     'Analyze',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeAnalyzeStep(state, options);
     },
     options,

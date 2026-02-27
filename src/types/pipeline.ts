@@ -21,7 +21,8 @@ export interface ResearchData {
   classification?: ClassificationData;
   tracks?: Record<string, TrackResult>;
   evaluations?: Record<string, EvaluationResult>;
-  [key: string]: any; // Allow additional data properties
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any; // Allow additional data properties — kept as any for test compatibility
 }
 
 /**
@@ -34,7 +35,7 @@ export interface SearchResult {
   domain?: string;
   publishedDate?: string;
   provider?: string;
-  raw?: Record<string, any>;
+  raw?: Record<string, unknown>;
 }
 
 /**
@@ -46,7 +47,7 @@ export interface ExtractedContent {
   content: string;
   extractionDate: string;
   /** Additional metadata about the extraction */
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -131,7 +132,7 @@ export interface TrackResult {
   name: string;
   results: ResearchResult[];
   data: ResearchData;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   errors: ResearchErrorData[];
   completed: boolean;
 }
@@ -148,6 +149,7 @@ export interface EvaluationResult {
 /**
  * Represents research results that can be validated against schemas
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ResearchResult = Record<string, any>;
 
 /**
@@ -171,7 +173,7 @@ export interface ResearchState {
   /** Default language model to use if not specified in a step */
   defaultLLM?: LanguageModel;
   /** Default search provider to use if not specified in a step */
-  defaultSearchProvider?: any;
+  defaultSearchProvider?: unknown;
   metadata: {
     startTime: Date;
     endTime?: Date;
@@ -200,7 +202,7 @@ export interface ResearchState {
     /** Pipeline configuration used */
     pipelineConfig?: PipelineConfig;
     /** Additional metadata properties */
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -221,7 +223,7 @@ export interface StepExecutionRecord {
     /** Whether the step was skipped */
     skipped?: boolean;
     /** Additional metadata */
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -229,7 +231,7 @@ export interface StepExecutionRecord {
  * Options for step execution
  */
 export interface StepOptions {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -282,7 +284,7 @@ export interface ResearchInput {
   /** Default language model to use for LLM-dependent steps */
   defaultLLM?: LanguageModel;
   /** Default search provider to use for search-dependent steps */
-  defaultSearchProvider?: any;
+  defaultSearchProvider?: unknown;
 }
 
 /**

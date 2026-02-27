@@ -469,7 +469,10 @@ function prepareResearchDataForLLM(state: ResearchState): string {
   // Add structured summary if available
   if (state.data.structuredSummary) {
     parts.push('\n### Structured Summary');
-    const structuredSummary = state.data.structuredSummary;
+    const structuredSummary = state.data.structuredSummary as {
+      keyPoints?: string[];
+      sources?: string[];
+    };
 
     if (structuredSummary.keyPoints && structuredSummary.keyPoints.length > 0) {
       parts.push('Key Points:');
@@ -602,8 +605,9 @@ function buildTransformedOutput(state: ResearchState, schema: z.ZodType): Record
 
     // Key findings field
     if (shape.keyFindings && !output.keyFindings) {
-      if (state.data.structuredSummary?.keyPoints) {
-        output.keyFindings = state.data.structuredSummary.keyPoints;
+      const ss1 = state.data.structuredSummary as { keyPoints?: string[] } | undefined;
+      if (ss1?.keyPoints) {
+        output.keyFindings = ss1.keyPoints;
       } else if (state.data.factChecks) {
         // Create from valid fact check statements
         output.keyFindings = state.data.factChecks
@@ -615,8 +619,9 @@ function buildTransformedOutput(state: ResearchState, schema: z.ZodType): Record
     // Sources field
     if (shape.sources && !output.sources) {
       // Try to get from different possible locations
-      if (state.data.structuredSummary?.sources) {
-        output.sources = state.data.structuredSummary.sources;
+      const ss2 = state.data.structuredSummary as { sources?: string[] } | undefined;
+      if (ss2?.sources) {
+        output.sources = ss2.sources;
       } else if (state.data.extractedContent) {
         output.sources = state.data.extractedContent.map((content) => content.url).filter(Boolean);
       } else if (state.data.searchResults) {

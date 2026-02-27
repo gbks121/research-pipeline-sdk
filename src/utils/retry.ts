@@ -155,11 +155,11 @@ export async function executeWithRetry<T>(
  * @returns A function decorator that adds retry behavior
  */
 export function withRetry(options: RetryOptions = {}) {
-  return function <T extends (...args: any[]) => Promise<any>>(
+  return function <T extends (...args: unknown[]) => Promise<unknown>>(
     target: T
   ): (...args: Parameters<T>) => Promise<ReturnType<T>> {
     return async function (...args: Parameters<T>): Promise<ReturnType<T>> {
-      return executeWithRetry(() => target(...args), options);
+      return executeWithRetry(() => target(...args), options) as Promise<ReturnType<T>>;
     };
   };
 }

@@ -59,6 +59,21 @@ export interface OrchestrateOptions {
 }
 
 /**
+ * Internal orchestration data structure stored in state.data.orchestration
+ */
+interface OrchestrationData {
+  availableTools: string[];
+  iterations: OrchestrationIteration[];
+}
+
+/**
+ * Helper to cast state.data.orchestration to OrchestrationData
+ */
+function getOrchestrationData(data: Record<string, unknown>): OrchestrationData {
+  return data.orchestration as OrchestrationData;
+}
+
+/**
  * Iteration record for orchestration
  */
 export interface OrchestrationIteration {
@@ -169,9 +184,10 @@ function createStateSummary(state: ResearchState): string {
   }
 
   // Add orchestration history if available
-  if (state.data.orchestration && state.data.orchestration.iterations) {
+  const orchData = state.data.orchestration ? getOrchestrationData(state.data) : null;
+  if (orchData && orchData.iterations) {
     parts.push('\nPrevious Actions:');
-    state.data.orchestration.iterations.forEach((iteration: OrchestrationIteration) => {
+    orchData.iterations.forEach((iteration: OrchestrationIteration) => {
       parts.push(`- Iteration ${iteration.iteration}: Used tool "${iteration.toolChosen}"`);
       if (iteration.result) {
         parts.push(
@@ -335,7 +351,9 @@ async function executeOrchestrationStep(
     if (!allTools.searchWeb && searchProvider) {
       allTools.searchWeb = searchWeb({ provider: searchProvider });
     } else if (!allTools.searchWeb && !searchProvider && state.defaultSearchProvider) {
-      allTools.searchWeb = searchWeb({ provider: state.defaultSearchProvider });
+      allTools.searchWeb = searchWeb({
+        provider: state.defaultSearchProvider as Parameters<typeof searchWeb>[0]['provider'],
+      });
     }
 
     if (!allTools.extractContent) {
@@ -457,7 +475,7 @@ async function executeOrchestrationStep(
             error: errorMessage,
           };
 
-          currentState.data.orchestration.iterations.push(planRecord);
+          getOrchestrationData(currentState.data).iterations.push(planRecord);
           toolErrors.push(planError instanceof Error ? planError : new Error(errorMessage));
         } else {
           // If planning fails and we shouldn't continue, rethrow
@@ -569,7 +587,7 @@ async function executeOrchestrationStep(
             result: 'Research process completed by agent decision',
           };
 
-          currentState.data.orchestration.iterations.push(finishRecord);
+          getOrchestrationData(currentState.data).iterations.push(finishRecord);
           break; // Exit the orchestration loop
         }
 
@@ -608,7 +626,7 @@ async function executeOrchestrationStep(
             error: `Tool "${chosenToolKey}" not found in available tools`,
           };
 
-          currentState.data.orchestration.iterations.push(errorRecord);
+          getOrchestrationData(currentState.data).iterations.push(errorRecord);
           continue;
         }
 
@@ -620,7 +638,7 @@ async function executeOrchestrationStep(
           timestamp: new Date().toISOString(),
         };
 
-        currentState.data.orchestration.iterations.push(iterationRecord);
+        getOrchestrationData(currentState.data).iterations.push(iterationRecord);
         stepLogger.debug(`Selected tool: ${chosenToolKey} (iteration ${iterationNumber})`);
 
         // Execute the chosen tool with error handling
@@ -636,21 +654,21 @@ async function executeOrchestrationStep(
           const resultSummary = getToolResultSummary(nextState, prevState);
 
           // Preserve our orchestration data structure and update the iteration record
+          const prevOrchData = getOrchestrationData(currentState.data);
           currentState = {
             ...nextState,
             data: {
               ...nextState.data,
               orchestration: {
-                ...currentState.data.orchestration,
+                ...prevOrchData,
               },
             },
           };
 
           // Update the iteration record with the result
+          const currentOrchData = getOrchestrationData(currentState.data);
           const currentIteration =
-            currentState.data.orchestration.iterations[
-              currentState.data.orchestration.iterations.length - 1
-            ];
+            currentOrchData.iterations[currentOrchData.iterations.length - 1];
           currentIteration.result = resultSummary;
 
           stepLogger.debug(`Tool ${chosenToolKey} executed successfully: ${resultSummary}`);
@@ -675,10 +693,8 @@ async function executeOrchestrationStep(
           );
 
           // Update iteration record to include error
-          const currentIteration =
-            currentState.data.orchestration.iterations[
-              currentState.data.orchestration.iterations.length - 1
-            ];
+          const errorOrchData = getOrchestrationData(currentState.data);
+          const currentIteration = errorOrchData.iterations[errorOrchData.iterations.length - 1];
           currentIteration.error = errorMessage;
 
           // If we should not continue on error, throw
@@ -739,16 +755,15 @@ async function executeOrchestrationStep(
     }
 
     // Generate results based on the orchestration
-    const successfulIterations = currentState.data.orchestration.iterations.filter(
+    const finalOrchData = getOrchestrationData(currentState.data);
+    const successfulIterations = finalOrchData.iterations.filter(
       (i: OrchestrationIteration) => !i.error
     ).length;
-    const totalIterations = currentState.data.orchestration.iterations.length;
+    const totalIterations = finalOrchData.iterations.length;
 
     const orchestrationResult = {
       summary: `Completed ${totalIterations} iterations of orchestrated research for query: ${state.query}`,
-      toolsUsed: currentState.data.orchestration.iterations.map(
-        (i: OrchestrationIteration) => i.toolChosen
-      ),
+      toolsUsed: finalOrchData.iterations.map((i: OrchestrationIteration) => i.toolChosen),
       successRate: totalIterations > 0 ? successfulIterations / totalIterations : 0,
       confidence: 0.8 * (successfulIterations / Math.max(1, totalIterations)),
       errors: toolErrors.length > 0,
@@ -779,16 +794,14 @@ async function executeOrchestrationStep(
           ...finalState.results,
           {
             orchestrationResult,
-            iterations: currentState.data.orchestration.iterations.map(
-              (i: OrchestrationIteration) => ({
-                iteration: i.iteration,
-                tool: i.toolChosen,
-                reasoning: i.reasoning,
-                timestamp: i.timestamp,
-                result: i.result || null,
-                error: i.error || null,
-              })
-            ),
+            iterations: finalOrchData.iterations.map((i: OrchestrationIteration) => ({
+              iteration: i.iteration,
+              tool: i.toolChosen,
+              reasoning: i.reasoning,
+              timestamp: i.timestamp,
+              result: i.result || null,
+              error: i.error || null,
+            })),
           },
         ],
       };
@@ -871,7 +884,7 @@ export function orchestrate(options: OrchestrateOptions): ReturnType<typeof crea
   return createStep(
     'Orchestration',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeOrchestrationStep(state, options);
     },
     options,

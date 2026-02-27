@@ -400,7 +400,7 @@ export function classify(options: ClassifyOptions = {}): ReturnType<typeof creat
   return createStep(
     'Classify',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeClassifyStep(state, options);
     },
     options,

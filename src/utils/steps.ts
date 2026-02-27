@@ -3,7 +3,7 @@
  */
 import { ResearchStep, ResearchState, StepOptions } from '../types/pipeline.js';
 import { BaseResearchError, isResearchError } from '../types/errors.js';
-import { logger, createStepLogger } from './logging.js';
+import { createStepLogger } from './logging.js';
 import { executeWithRetry } from './retry.js';
 
 /**
@@ -31,7 +31,7 @@ export interface StepCreationOptions {
  * @param creationOptions Error handling and retry configuration
  * @returns A research step with standardized error handling
  */
-export function createStep<T extends StepOptions = StepOptions>(
+export function createStep<T extends object = Record<string, unknown>>(
   name: string,
   executor: (state: ResearchState, options: T) => Promise<ResearchState>,
   options: T = {} as T,
@@ -42,7 +42,7 @@ export function createStep<T extends StepOptions = StepOptions>(
   // Create the step with standardized execution
   const step: ResearchStep = {
     name,
-    options,
+    options: options as StepOptions,
     retryable: creationOptions.retryable ?? false,
     optional: creationOptions.optional ?? false,
 

@@ -155,14 +155,17 @@ export class Logger {
   private getConsoleMethod(level: LogLevel): (...args: unknown[]) => void {
     switch (level) {
       case 'debug':
+        // eslint-disable-next-line no-console
         return console.debug;
       case 'info':
+        // eslint-disable-next-line no-console
         return console.info;
       case 'warn':
         return console.warn;
       case 'error':
         return console.error;
       default:
+        // eslint-disable-next-line no-console
         return console.log;
     }
   }

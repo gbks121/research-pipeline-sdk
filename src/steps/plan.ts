@@ -358,7 +358,7 @@ async function generateResearchPlanWithLLM(
 export function plan(options: PlanOptions = {}): ReturnType<typeof createStep> {
   return createStep(
     'ResearchPlanning',
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executePlanStep(state, options);
     },
     options,

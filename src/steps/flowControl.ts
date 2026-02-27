@@ -192,7 +192,7 @@ export function evaluate(options: EvaluateOptions): ReturnType<typeof createStep
   return createStep(
     'Evaluate',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: Record<string, any>) => {
+    async (state: ResearchState) => {
       return executeEvaluateStep(state, options);
     },
     options
