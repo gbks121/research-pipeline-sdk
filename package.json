@@ -33,7 +33,7 @@
     "docs:publish": "npm run docs && node scripts/publish-docs.js",
     "docs:preview": "npm run docs && npx serve docs/api",
     "prebuild": "npm run clean",
-    "prepare": "npm run build:prod",
+    "prepare": "",
     "prepublishOnly": "node scripts/verify-peer-deps.js && node scripts/security-check.js && npm run lint && npm run test:console && npm run build:prod && npm run docs",
     "release": "npm run prepublishOnly && npm publish --access public",
     "release:next": "npm run prepublishOnly && npm publish --tag next --access public",
