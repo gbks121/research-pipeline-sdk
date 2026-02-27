@@ -2,13 +2,12 @@
  * Query refinement step for the research pipeline
  * Improves search queries based on previous findings
  */
-import * as mastra from 'mastra';
 import { createStep } from '../utils/steps.js';
 import { ResearchState } from '../types/pipeline.js';
 import { z } from 'zod';
-import { generateText, generateObject, LanguageModel } from 'ai';
+import { generateObject, LanguageModel } from 'ai';
 import { ValidationError, LLMError, ConfigurationError } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 import { executeWithRetry } from '../utils/retry.js';
 
 /**
@@ -96,7 +95,7 @@ async function executeRefineQueryStep(
 
   try {
     // Get relevant information from state based on refinement strategy
-    const relevantData: Record<string, any> = {
+    const relevantData: Record<string, unknown> = {
       originalQuery: state.query,
     };
 
@@ -259,7 +258,7 @@ async function executeRefineQueryStep(
 async function simulateQueryRefinement(
   originalQuery: string,
   strategy: string,
-  relevantData: Record<string, any>,
+  relevantData: Record<string, unknown>,
   maxQueries: number
 ): Promise<RefinedQuery[]> {
   // Simulate a delay as if we're calling an LLM
@@ -326,7 +325,7 @@ async function simulateQueryRefinement(
 async function generateRefinedQueriesWithLLM(
   originalQuery: string,
   basedOn: string,
-  relevantData: Record<string, any>,
+  relevantData: Record<string, unknown>,
   maxQueries: number,
   llm: LanguageModel,
   temperature: number,
@@ -348,18 +347,23 @@ async function generateRefinedQueriesWithLLM(
         let contextText = `Original query: "${originalQuery}"\n\n`;
 
         // Add search results if available
-        if (relevantData.searchResults && relevantData.searchResults.length > 0) {
+        if (relevantData.searchResults && (relevantData.searchResults as unknown[]).length > 0) {
           contextText += 'Search Results:\n';
-          relevantData.searchResults.slice(0, 5).forEach((result: any, index: number) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (relevantData.searchResults as any[]).slice(0, 5).forEach((result, index: number) => {
             contextText += `${index + 1}. ${result.title} - ${result.snippet || 'No snippet available'}\n`;
           });
           contextText += '\n';
         }
 
         // Add extracted content if available (summaries only)
-        if (relevantData.extractedContent && relevantData.extractedContent.length > 0) {
+        if (
+          relevantData.extractedContent &&
+          (relevantData.extractedContent as unknown[]).length > 0
+        ) {
           contextText += 'Extracted Content Summaries:\n';
-          relevantData.extractedContent.slice(0, 3).forEach((content: any, index: number) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (relevantData.extractedContent as any[]).slice(0, 3).forEach((content, index: number) => {
             const contentSummary = content.content.substring(0, 150) + '...';
             contextText += `${index + 1}. ${content.title}: ${contentSummary}\n`;
           });
@@ -367,15 +371,17 @@ async function generateRefinedQueriesWithLLM(
         }
 
         // Add fact check results if available
-        if (relevantData.factChecks && relevantData.factChecks.length > 0) {
+        if (relevantData.factChecks && (relevantData.factChecks as unknown[]).length > 0) {
           contextText += 'Fact Check Results:\n';
-          const validFacts = relevantData.factChecks.filter((check: any) => check.isValid);
-          const invalidFacts = relevantData.factChecks.filter((check: any) => !check.isValid);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const validFacts = (relevantData.factChecks as any[]).filter((check) => check.isValid);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const invalidFacts = (relevantData.factChecks as any[]).filter((check) => !check.isValid);
 
           contextText += `Valid facts: ${validFacts.length}, Invalid facts: ${invalidFacts.length}\n`;
           if (invalidFacts.length > 0) {
             contextText += 'Examples of invalid facts:\n';
-            invalidFacts.slice(0, 2).forEach((fact: any, index: number) => {
+            invalidFacts.slice(0, 2).forEach((fact, index: number) => {
               contextText += `${index + 1}. "${fact.statement}" (Confidence: ${fact.confidence})\n`;
             });
           }

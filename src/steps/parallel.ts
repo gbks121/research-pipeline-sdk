@@ -10,9 +10,8 @@ import {
   ConfigurationError,
   ProcessingError,
   TimeoutError,
-  BaseResearchError,
 } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 
 /**
  * Custom error for parallel execution issues
@@ -35,7 +34,10 @@ export interface ParallelOptions {
   /** Maximum time in ms to wait for all tracks to complete */
   timeout?: number;
   /** Function to merge results from all tracks */
-  mergeFunction?: (tracks: Record<string, TrackResult>, state: ResearchState) => any;
+  mergeFunction?: (
+    tracks: Record<string, TrackResult>,
+    state: ResearchState
+  ) => Record<string, unknown>;
   /** Whether to include the merged result in the results array */
   includeInResults?: boolean;
   /** Retry configuration for the parallel step */
@@ -62,7 +64,6 @@ async function executeParallelStep(
     timeout = 300000, // 5 minutes default timeout
     mergeFunction = defaultMergeFunction,
     includeInResults = true,
-    retry = { maxRetries: 0, baseDelay: 1000 },
   } = options;
 
   try {
@@ -206,7 +207,7 @@ async function executeParallelStep(
 
       // Collect all track results and merge them
       const trackResults: Record<string, TrackResult> = {};
-      let mergedData = { ...state.data };
+      const mergedData = { ...state.data };
       let allResults = [...state.results];
       let allErrors = [...state.errors];
 
@@ -237,6 +238,7 @@ async function executeParallelStep(
         // This ensures data from each track is copied into the main state
         if (trackState.data) {
           // Filter out 'tracks' key since we handle it specially
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { tracks: _, ...otherData } = trackState.data;
 
           // Merge the data objects
@@ -270,7 +272,7 @@ async function executeParallelStep(
           allResults.push({
             parallel: {
               tracks: Object.keys(trackResults),
-              ...mergedResult.results,
+              ...(mergedResult.results as Record<string, unknown> | undefined),
             },
           });
         }
@@ -323,7 +325,7 @@ async function executeParallelStep(
             completed: completedTracks,
             failed: failedTracks,
             successRate: successRate,
-          } as Record<string, any>,
+          } as unknown as Record<string, ResearchState>,
           parallelCompletedAt: new Date().toISOString(),
         },
       };
@@ -430,25 +432,23 @@ export function parallel(options: ParallelOptions): ReturnType<typeof createStep
  * @param tracks The track results to merge
  * @returns A merged result object
  */
-export function defaultMergeFunction(tracks: Record<string, TrackResult>): Record<string, any> {
-  const merged: Record<string, any> = {
-    byTrack: {},
-  };
+export function defaultMergeFunction(tracks: Record<string, TrackResult>): Record<string, unknown> {
+  const byTrack: Record<string, unknown> = {};
 
   // Organize results by track
   Object.entries(tracks).forEach(([trackName, trackResult]) => {
     if (trackResult.completed) {
-      merged.byTrack[trackName] = {
+      byTrack[trackName] = {
         results: trackResult.results,
         completed: true,
       };
     } else {
-      merged.byTrack[trackName] = {
+      byTrack[trackName] = {
         errors: trackResult.errors,
         completed: false,
       };
     }
   });
 
-  return merged;
+  return { byTrack };
 }

@@ -10,7 +10,7 @@ import {
   ProcessingError,
   MaxIterationsError,
 } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 
 /**
  * Options for the evaluate step
@@ -47,7 +47,6 @@ async function executeEvaluateStep(
     criteriaName = 'CustomEvaluation',
     confidenceThreshold = 0.7,
     storeResult = true,
-    retry = { maxRetries: 2, baseDelay: 1000 },
   } = options;
 
   try {

@@ -9,13 +9,12 @@
  * @module steps/analyze
  * @category Steps
  */
-import * as mastra from 'mastra';
 import { createStep } from '../utils/steps.js';
 import { ResearchState } from '../types/pipeline.js';
 import { z } from 'zod';
-import { generateText, generateObject, LanguageModel } from 'ai';
+import { generateObject, LanguageModel } from 'ai';
 import { ValidationError, LLMError, ConfigurationError } from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { createStepLogger } from '../utils/logging.js';
 import { executeWithRetry } from '../utils/retry.js';
 
 /**
@@ -120,14 +119,20 @@ async function executeAnalyzeStep(
       stepLogger.debug(
         `Adding ${state.data.extractedContent.length} extracted content items to analysis`
       );
-      contentToAnalyze.push(...state.data.extractedContent.map((item: any) => item.content));
+      contentToAnalyze.push(
+        ...state.data.extractedContent.map((item: { content: string }) => item.content)
+      );
     }
 
     // Add factual information if available (only valid facts)
     if (state.data.factChecks) {
-      const validFactChecks = state.data.factChecks.filter((check: any) => check.isValid);
+      const validFactChecks = state.data.factChecks.filter(
+        (check: { isValid: boolean; statement: string }) => check.isValid
+      );
       stepLogger.debug(`Adding ${validFactChecks.length} validated fact statements to analysis`);
-      contentToAnalyze.push(...validFactChecks.map((check: any) => check.statement));
+      contentToAnalyze.push(
+        ...validFactChecks.map((check: { isValid: boolean; statement: string }) => check.statement)
+      );
     }
 
     if (contentToAnalyze.length === 0) {

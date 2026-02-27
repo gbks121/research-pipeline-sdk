@@ -6,7 +6,7 @@ import { createStep } from '../utils/steps.js';
 import { ResearchState, ResearchStep } from '../types/pipeline.js';
 import { ValidationError, ConfigurationError, LLMError, ProcessingError } from '../types/errors.js';
 import { createStepLogger } from '../utils/logging.js';
-import { generateText, generateObject, LanguageModel } from 'ai';
+import { generateObject, LanguageModel } from 'ai';
 import { executeWithRetry } from '../utils/retry.js';
 import { z } from 'zod';
 
@@ -28,7 +28,7 @@ export interface OrchestrateOptions {
   /** LLM model to use for orchestration (from the AI library) */
   model: LanguageModel;
   /** Default search provider to use for search-dependent steps */
-  searchProvider?: any;
+  searchProvider?: unknown;
   /** Map of tool names to step functions that can be used by the agent */
   tools?: Record<string, ResearchStep>;
   /** Custom prompt for the orchestration agent */

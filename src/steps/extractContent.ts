@@ -6,18 +6,12 @@ import { createStep } from '../utils/steps.js';
 import {
   ResearchState,
   ExtractedContent as StateExtractedContent,
-  SearchResult,
+  StepOptions,
 } from '../types/pipeline.js';
-import { StepOptions } from '../types/pipeline.js';
 import axios, { AxiosError } from 'axios';
 import * as cheerio from 'cheerio';
-import {
-  ExtractionError,
-  NetworkError,
-  ValidationError,
-  ConfigurationError,
-} from '../types/errors.js';
-import { logger, createStepLogger } from '../utils/logging.js';
+import { ExtractionError, NetworkError, ValidationError } from '../types/errors.js';
+import { createStepLogger } from '../utils/logging.js';
 
 /**
  * Options for the content extraction step
@@ -424,7 +418,6 @@ async function extractContentFromURL(
       }
 
       // Fetch the content
-      const startFetch = Date.now();
       const response = await axios.get(url, {
         timeout,
         headers: {
@@ -449,7 +442,6 @@ async function extractContentFromURL(
         maxRedirects: 5,
         validateStatus: (status) => status < 400, // Only allow status codes less than 400
       });
-      const fetchTime = Date.now() - startFetch;
 
       // Check content type
       const contentType = response.headers['content-type'] || '';
@@ -630,7 +622,7 @@ export function extractContent(options: ExtractContentOptions = {}): ReturnType<
   return createStep(
     'ContentExtraction',
     // Wrapper function that matches the expected signature
-    async (state: ResearchState, opts?: StepOptions) => {
+    async (state: ResearchState) => {
       return executeExtractContentStep(state, options);
     },
     options,

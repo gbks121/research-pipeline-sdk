@@ -15,7 +15,7 @@ import { executeWithRetry } from '../utils/retry.js';
  */
 export interface TransformOptions extends StepOptions {
   /** Custom transformation function */
-  transformFn?: (state: ResearchState) => Record<string, any>;
+  transformFn?: (state: ResearchState) => Record<string, unknown>;
   /** Whether to allow missing fields with defaults */
   allowMissingWithDefaults?: boolean;
   /** Override output validation (use with caution) */
@@ -94,9 +94,6 @@ async function executeTransformStep(
   try {
     // Extract the schema from state
     const { outputSchema } = state;
-
-    // Get the current results data (usually from the last result)
-    const currentResult = state.results.length > 0 ? state.results[state.results.length - 1] : {};
 
     let transformedResult;
 
@@ -241,7 +238,7 @@ async function transformWithLLM(
   systemPrompt: string,
   retry: { maxRetries: number; baseDelay: number },
   stepLogger: ReturnType<typeof createStepLogger>
-): Promise<Record<string, any>> {
+): Promise<Record<string, unknown>> {
   stepLogger.info('Starting LLM-based transformation');
 
   try {
@@ -506,7 +503,6 @@ function extractSchemaInfo(schema: z.ZodType): string {
 
       for (const [key, subType] of Object.entries(shape)) {
         const isRequired = !subType.isOptional();
-        let typeDesc: string;
         let description = '';
 
         // Extract description if available
@@ -587,10 +583,10 @@ function extractSchemaInfo(schema: z.ZodType): string {
 /**
  * Build transformed output based on the schema and available state data
  */
-function buildTransformedOutput(state: ResearchState, schema: z.ZodType): Record<string, any> {
+function buildTransformedOutput(state: ResearchState, schema: z.ZodType): Record<string, unknown> {
   const result = state.results.length > 0 ? state.results[state.results.length - 1] : {};
 
-  const output: Record<string, any> = { ...result };
+  const output: Record<string, unknown> = { ...result };
 
   // Extract the schema shape
   if (schema instanceof z.ZodObject) {
@@ -638,11 +634,14 @@ function buildTransformedOutput(state: ResearchState, schema: z.ZodType): Record
  * Handles nested objects and arrays recursively
  */
 function fixMissingFields(
-  result: Record<string, any>,
+  result: Record<string, unknown>,
   error: z.ZodError,
   state: ResearchState
-): Record<string, any> {
-  const fixed = JSON.parse(JSON.stringify(result)); // Deep clone to avoid mutations
+): Record<string, unknown> {
+  const fixed: Record<string, unknown> = JSON.parse(JSON.stringify(result)) as Record<
+    string,
+    unknown
+  >; // Deep clone to avoid mutations
   const fixedPaths = new Set<string>(); // Track fixed paths to avoid redundant fixes
 
   // Group errors by path for efficient processing
@@ -717,8 +716,9 @@ function fixMissingFields(
 /**
  * Ensures a path exists in an object by creating any missing objects along the way
  */
-function ensurePathExists(obj: any, path: Array<string | number>): void {
-  let current = obj;
+function ensurePathExists(obj: Record<string, unknown>, path: Array<string | number>): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let current: any = obj;
 
   for (let i = 0; i < path.length - 1; i++) {
     const key = path[i];
@@ -747,8 +747,13 @@ function ensurePathExists(obj: any, path: Array<string | number>): void {
 /**
  * Sets a value at a specified path in an object
  */
-function setValueAtPath(obj: any, path: Array<string | number>, value: any): void {
-  let current = obj;
+function setValueAtPath(
+  obj: Record<string, unknown>,
+  path: Array<string | number>,
+  value: unknown
+): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let current: any = obj;
 
   for (let i = 0; i < path.length - 1; i++) {
     const key = path[i];
@@ -783,8 +788,9 @@ function setValueAtPath(obj: any, path: Array<string | number>, value: any): voi
 /**
  * Gets a value at a specified path in an object
  */
-function getValueAtPath(obj: any, path: Array<string | number>): any {
-  let current = obj;
+function getValueAtPath(obj: Record<string, unknown>, path: Array<string | number>): unknown {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let current: any = obj;
 
   for (const key of path) {
     if (current === undefined || current === null) {
@@ -825,7 +831,7 @@ function getDefaultString(path: Array<string | number>): string {
 /**
  * Create a default array with appropriate items based on context
  */
-function createDefaultArray(path: Array<string | number>, state: ResearchState): any[] {
+function createDefaultArray(path: Array<string | number>, state: ResearchState): unknown[] {
   const lastKey = path[path.length - 1];
 
   // Handle specific array field names with appropriate defaults
