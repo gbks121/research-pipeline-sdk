@@ -62,7 +62,7 @@ const defaultOnRetry = (attempt: number, error: unknown, delay: number): void =>
  *
  * @example
  * ```typescript
- * import { executeWithRetry } from '@plust/datasleuth';
+ * import { executeWithRetry } from 'research-pipeline-sdk';
  *
  * const result = await executeWithRetry(
  *   async () => await fetchDataFromAPI(url),

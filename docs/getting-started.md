@@ -1,20 +1,20 @@
-# Getting Started with @plust/datasleuth
+# Getting Started with research-pipeline-sdk
 
 This guide will help you quickly set up and run your first research project with
-@plust/datasleuth.
+research-pipeline-sdk.
 
 ## Installation
 
 Install the package using npm:
 
 ```bash
-npm install @plust/datasleuth
+npm install research-pipeline-sdk
 ```
 
 Or using yarn:
 
 ```bash
-yarn add @plust/datasleuth
+yarn add research-pipeline-sdk
 ```
 
 ## Quick Start Example
@@ -22,7 +22,7 @@ yarn add @plust/datasleuth
 Here's a minimal example to get you started:
 
 ```typescript
-import { research } from '@plust/datasleuth';
+import { research } from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { openai } from '@ai-sdk/openai';
 import { google } from 'omnisearch-sdk';
@@ -63,7 +63,7 @@ runResearch();
 
 ## Setting Up Search Providers
 
-When using @plust/datasleuth, you need to configure search providers for web
+When using research-pipeline-sdk, you need to configure search providers for web
 research. There are two ways to use search providers:
 
 ### 1. Using a defaultSearchProvider
@@ -72,7 +72,7 @@ Provide a defaultSearchProvider in the research function to use across all
 search steps:
 
 ```typescript
-import { research } from '@plust/datasleuth';
+import { research } from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { google } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
@@ -98,7 +98,7 @@ For more control, you can specify different search providers in each searchWeb
 step:
 
 ```typescript
-import { research, searchWeb, extractContent } from '@plust/datasleuth';
+import { research, searchWeb, extractContent } from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { google, bing } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';

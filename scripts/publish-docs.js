@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Documentation publishing script for @plust/datasleuth
+ * Documentation publishing script for research-pipeline-sdk
  *
  * This script automates the process of publishing API documentation to GitHub Pages.
  * It copies the generated documentation to a temporary directory, adds necessary files
@@ -90,7 +90,7 @@ async function publishDocs() {
       <html>
         <head>
           <meta charset="utf-8">
-          <title>@plust/datasleuth API Documentation</title>
+          <title>research-pipeline-sdk API Documentation</title>
           <meta http-equiv="refresh" content="0; url=./index.html">
         </head>
         <body>

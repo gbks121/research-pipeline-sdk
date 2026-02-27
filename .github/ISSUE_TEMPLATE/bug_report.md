@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve @plust/datasleuth
+about: Create a report to help us improve research-pipeline-sdk
 title: '[BUG] '
 labels: bug
 assignees: ''
@@ -36,7 +36,7 @@ assignees: ''
 
 ## Environment
 
-- @plust/datasleuth version:
+- research-pipeline-sdk version:
 - Node.js version:
 - npm/yarn version:
 - Operating system:

@@ -38,7 +38,7 @@ const researchStepSchema = z.object({
 });
 
 /**
- * Main research function - the primary API for the @plust/datasleuth package
+ * Main research function - the primary API for the research-pipeline-sdk package
  *
  * This function orchestrates the entire research process from query to results.
  * It takes a research query, an output schema for validation, and optional
@@ -60,7 +60,7 @@ const researchStepSchema = z.object({
  *
  * @example
  * ```typescript
- * import { research } from '@plust/datasleuth';
+ * import { research } from 'research-pipeline-sdk';
  * import { z } from 'zod';
  * import { openai } from '@ai-sdk/openai';
  * import { google } from 'omnisearch-sdk';

@@ -1,6 +1,7 @@
-# Contributing to @plust/datasleuth
+# Contributing to research-pipeline-sdk
 
-Thank you for your interest in contributing to @plust/datasleuth! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to research-pipeline-sdk! This
+document provides guidelines and instructions for contributing to the project.
 
 ## Table of Contents
 
@@ -22,7 +23,9 @@ Thank you for your interest in contributing to @plust/datasleuth! This document 
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.
+This project and everyone participating in it is governed by our Code of
+Conduct. By participating, you are expected to uphold this code. Please report
+unacceptable behavior to the project maintainers.
 
 ## Getting Started
 
@@ -37,8 +40,8 @@ This project and everyone participating in it is governed by our Code of Conduct
 1. Fork the repository
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/datasleuth.git
-   cd datasleuth
+   git clone https://github.com/YOUR_USERNAME/research-pipeline-sdk.git
+   cd research-pipeline-sdk
    ```
 3. Install dependencies:
    ```bash
@@ -90,7 +93,8 @@ We use a feature branch workflow:
 
 ### Coding Standards
 
-We follow TypeScript best practices and use ESLint and Prettier for code quality:
+We follow TypeScript best practices and use ESLint and Prettier for code
+quality:
 
 - All code should be written in TypeScript
 - Follow the existing code style
@@ -101,32 +105,40 @@ We follow TypeScript best practices and use ESLint and Prettier for code quality
 Key coding patterns to follow:
 
 1. **Factory Function Pattern**: Create steps using factory functions.
+
    ```typescript
-   export function myStep(options: MyStepOptions = {}): ReturnType<typeof createStep> {
+   export function myStep(
+     options: MyStepOptions = {}
+   ): ReturnType<typeof createStep> {
      return createStep('MyStep', executeMyStep, options);
    }
    ```
 
 2. **Immutable State Transformation**: Don't modify state directly.
+
    ```typescript
-   function executeStep(state: ResearchState, options: StepOptions): Promise<ResearchState> {
+   function executeStep(
+     state: ResearchState,
+     options: StepOptions
+   ): Promise<ResearchState> {
      return {
        ...state,
        data: {
          ...state.data,
-         newData: processedResult
-       }
+         newData: processedResult,
+       },
      };
    }
    ```
 
 3. **Options Pattern**: Use optional configuration objects with defaults.
+
    ```typescript
    interface MyOptions {
      param1?: string;
      param2?: number;
    }
-   
+
    function myFunction(options: MyOptions = {}) {
      const { param1 = 'default', param2 = 42 } = options;
      // Implementation
@@ -157,11 +169,11 @@ describe('myFunction', () => {
   it('should process valid input correctly', () => {
     // Test implementation
   });
-  
+
   it('should handle empty input gracefully', () => {
     // Test implementation
   });
-  
+
   it('should throw appropriate error for invalid input', () => {
     // Test implementation
   });
@@ -210,7 +222,9 @@ The project follows semantic versioning:
 ## Community
 
 - Join our [Discord server](https://discord.gg/example) for discussions
-- Check the [GitHub issues](https://github.com/example/datasleuth/issues) for ways to contribute
+- Check the
+  [GitHub issues](https://github.com/example/research-pipeline-sdk/issues) for
+  ways to contribute
 - Report bugs and request features through GitHub issues
 
-Thank you for contributing to @plust/datasleuth!
+Thank you for contributing to research-pipeline-sdk!

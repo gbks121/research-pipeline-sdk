@@ -13,7 +13,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "paths": {
-      "@plust/datasleuth/*": ["./src/*"]
+      "research-pipeline-sdk/*": ["./src/*"]
     },
     "baseUrl": ".",
     "noImplicitAny": true,

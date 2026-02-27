@@ -848,7 +848,7 @@ async function executeOrchestrationStep(
  *
  * @example
  * ```typescript
- * import { research, orchestrate } from '@plust/datasleuth';
+ * import { research, orchestrate } from 'research-pipeline-sdk';
  * import { openai } from '@ai-sdk/openai';
  * import { google } from 'omnisearch-sdk';
  *

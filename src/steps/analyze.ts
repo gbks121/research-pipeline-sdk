@@ -453,7 +453,7 @@ ${includeRecommendations ? 'Provide actionable recommendations based on your ana
  *
  * @example
  * ```typescript
- * import { research, analyze } from '@plust/datasleuth';
+ * import { research, analyze } from 'research-pipeline-sdk';
  * import { openai } from '@ai-sdk/openai';
  *
  * const results = await research({

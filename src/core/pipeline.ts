@@ -49,7 +49,7 @@ const DEFAULT_PIPELINE_CONFIG: PipelineConfig = {
  * @example
  * ```typescript
  * import { z } from 'zod';
- * import { createInitialState } from '@plust/datasleuth';
+ * import { createInitialState } from 'research-pipeline-sdk';
  *
  * const outputSchema = z.object({
  *   summary: z.string(),

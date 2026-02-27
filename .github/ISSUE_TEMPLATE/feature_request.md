@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea or enhancement for @plust/datasleuth
+about: Suggest an idea or enhancement for research-pipeline-sdk
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''

@@ -334,7 +334,7 @@ async function generateResearchPlanWithLLM(
  *
  * @example
  * ```typescript
- * import { research, plan } from '@plust/datasleuth';
+ * import { research, plan } from 'research-pipeline-sdk';
  * import { openai } from '@ai-sdk/openai';
  *
  * const results = await research({

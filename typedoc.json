@@ -2,21 +2,15 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/index.ts"],
   "out": "docs/api",
-  "name": "@plust/datasleuth",
+  "name": "research-pipeline-sdk",
   "includeVersion": true,
   "excludePrivate": true,
   "excludeProtected": true,
   "categorizeByGroup": true,
-  "categoryOrder": [
-    "Core",
-    "Steps",
-    "Utils",
-    "Types",
-    "*"
-  ],
+  "categoryOrder": ["Core", "Steps", "Utils", "Types", "*"],
   "navigationLinks": {
-    "GitHub": "https://github.com/Jacques2Marais/datasleuth",
-    "npm": "https://www.npmjs.com/package/@plust/datasleuth"
+    "GitHub": "https://github.com/PlustOrg/research-pipeline-sdk",
+    "npm": "https://www.npmjs.com/package/research-pipeline-sdk"
   },
   "searchInComments": true,
   "visibilityFilters": {

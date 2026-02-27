@@ -1,14 +1,15 @@
-# @plust/datasleuth
+# research-pipeline-sdk
 
 Build LLM-powered research pipelines and output structured data.
 
-DataSleuth is a modular AI-powered research engine that transforms natural
-language queries into structured, validated data. It orchestrates information
-gathering, fact checking, analysis, and synthesis using customizable pipelines
-and LLM integration to deliver research results in your specified format.
+research-pipeline-sdk is a modular AI-powered research engine that transforms
+natural language queries into structured, validated data. It orchestrates
+information gathering, fact checking, analysis, and synthesis using customizable
+pipelines and LLM integration to deliver research results in your specified
+format.
 
-![npm version](https://img.shields.io/npm/v/@plust/datasleuth)
-![license](https://img.shields.io/npm/l/@plust/datasleuth)
+![npm version](https://img.shields.io/npm/v/research-pipeline-sdk)
+![license](https://img.shields.io/npm/l/research-pipeline-sdk)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)
 
 > Note: This project is still early in its development. Please feel free to test
@@ -16,7 +17,7 @@ and LLM integration to deliver research results in your specified format.
 
 ## Table of Contents
 
-- [@plust/datasleuth](#plustdatasleuth)
+- [research-pipeline-sdk](#research-pipeline-sdk)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Key Features](#key-features)
@@ -53,7 +54,7 @@ and LLM integration to deliver research results in your specified format.
 ## Installation
 
 ```bash
-npm install @plust/datasleuth
+npm install research-pipeline-sdk
 ```
 
 ## Key Features
@@ -74,7 +75,7 @@ npm install @plust/datasleuth
 ## Quick Start
 
 ```typescript
-import { research } from '@plust/datasleuth';
+import { research } from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { openai } from '@ai-sdk/openai';
 
@@ -99,10 +100,10 @@ console.log(results);
 
 ### Basic Research
 
-The simplest way to use @plust/datasleuth is with the default pipeline:
+The simplest way to use research-pipeline-sdk is with the default pipeline:
 
 ```typescript
-import { research } from '@plust/datasleuth';
+import { research } from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { openai } from '@ai-sdk/openai';
 
@@ -133,7 +134,7 @@ import {
   extractContent,
   evaluate,
   repeatUntil,
-} from '@plust/datasleuth';
+} from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { google } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
@@ -185,8 +186,8 @@ const results = await research({
 
 ### LLM Integration with Vercel AI SDK
 
-@plust/datasleuth seamlessly integrates with the Vercel AI SDK, allowing you to
-use any supported LLM provider:
+research-pipeline-sdk seamlessly integrates with the Vercel AI SDK, allowing you
+to use any supported LLM provider:
 
 ```typescript
 import {
@@ -195,7 +196,7 @@ import {
   analyze,
   factCheck,
   summarize,
-} from '@plust/datasleuth';
+} from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
@@ -262,7 +263,7 @@ import {
   extractContent,
   analyze,
   ResultMerger,
-} from '@plust/datasleuth';
+} from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { google, bing } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
@@ -343,7 +344,7 @@ import {
   extractContent,
   analyze,
   transform,
-} from '@plust/datasleuth';
+} from 'research-pipeline-sdk';
 import { z } from 'zod';
 import { google, serpapi } from 'omnisearch-sdk';
 import { openai } from '@ai-sdk/openai';
@@ -605,7 +606,8 @@ ResultMerger.createMergeFunction({
 
 ## Error Handling
 
-@plust/datasleuth provides detailed error types for different failure scenarios:
+research-pipeline-sdk provides detailed error types for different failure
+scenarios:
 
 - `ConfigurationError`: Invalid configuration (missing required parameters,
   etc.)
@@ -625,7 +627,7 @@ Each error includes:
 Example handling errors:
 
 ```typescript
-import { research, BaseResearchError } from '@plust/datasleuth';
+import { research, BaseResearchError } from 'research-pipeline-sdk';
 import { z } from 'zod';
 
 try {

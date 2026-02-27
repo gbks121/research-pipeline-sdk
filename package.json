@@ -1,5 +1,5 @@
 {
-  "name": "@plust/datasleuth",
+  "name": "research-pipeline-sdk",
   "version": "0.2.1",
   "description": "Build LLM-powered research pipelines and output structured data.",
   "main": "dist/index.js",
@@ -50,7 +50,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PlustOrg/datasleuth.git"
+    "url": "git+https://github.com/PlustOrg/research-pipeline-sdk.git"
   },
   "keywords": [
     "research",
@@ -71,9 +71,9 @@
   "author": "Jacques Marais",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PlustOrg/datasleuth/issues"
+    "url": "https://github.com/PlustOrg/research-pipeline-sdk/issues"
   },
-  "homepage": "https://github.com/PlustOrg/datasleuth#readme",
+  "homepage": "https://github.com/PlustOrg/research-pipeline-sdk#readme",
   "engines": {
     "node": ">=18.0.0"
   },
