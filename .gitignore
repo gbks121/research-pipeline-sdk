@@ -26,6 +26,7 @@ yarn-error.log*
 # Testing
 test-output.json
 coverage-output.json
+/coverage
 
 # OS specific
 .DS_Store
