@@ -84,7 +84,7 @@
     "axios": "^1.9.0",
     "cheerio": "^1.0.0",
     "mastra": "^0.6.1",
-    "omnisearch-sdk": ">=1.1.0"
+    "omnisearch-sdk": "1.2.0"
   },
   "peerDependencies": {
     "ai": "^4.0.0",
